@@ -10,4 +10,4 @@ class Game extends React.Component {
     }
   }
   
-  export default Game;
+  export default Game

@@ -1,5 +1,10 @@
 import React from 'react';
 
+// Import sign language icons
+import A from '../sign_language_icons/A.svg';
+import B from '../sign_language_icons/B.svg';
+import C from '../sign_language_icons/C.svg';
+
 class GameEngine extends React.Component {
     /*
 
@@ -10,9 +15,14 @@ class GameEngine extends React.Component {
         this.state = {}
         // POSSIBLE STATUSES: DISPLAYING_HAND_SIGN, DISPLAY_RESULT
         this.state.currentStatus = "DISPLAY_HAND_SIGN"
-        this.state.handSignOptions = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-                                      "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        // this.state.handSignOptions = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+        //                               "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        
+        // target: A B C D E K I    
+        this.state.handSignOptions = ["A", "B", "C"];
+        this.state.handSignImages = [A, B, C];
         this.state.currentHandSign = "A";
+        this.state.currentHandSignImage = A;
         this.state.result = "CORRECT";
 
         this.state.timeoutSet = false;
@@ -21,8 +31,10 @@ class GameEngine extends React.Component {
     }
 
     setNewRandomHandSign() {
+        var randomIndex = Math.floor(Math.random() * this.state.handSignOptions.length);
         this.setState({
-            currentHandSign: this.state.handSignOptions[Math.floor(Math.random() * this.state.handSignOptions.length)]
+            currentHandSign: this.state.handSignOptions[randomIndex],
+            currentHandSignImage: this.state.handSignImages[randomIndex],
         });
     }
 
@@ -41,14 +53,15 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_RESULT",
                     timeoutSet: false
                 });
-            }, 2000);
+            }, 4000);
             this.setState({
                 timeoutSet: true
             })
         }
         return (
-            <div>
-                {this.state.currentHandSign}
+            <div className="handSignPrompt">
+                <h1 className="label">Hand sign for</h1>
+                <h1 className="prompt">"{this.state.currentHandSign}"</h1>
             </div>
         )
     }
@@ -68,14 +81,16 @@ class GameEngine extends React.Component {
         }
         if(this.state.result === "CORRECT") {
             return (
-                <div>
-                    You are correct
+                <div className="result">
+                    <h1>You got it! </h1>
+                    <img src={this.state.currentHandSignImage} />
                 </div>
             )
         } else {
             return (
-                <div>
-                    You are incorrect
+                <div className="result">
+                    <h1>Better next time</h1>
+                    <img src={this.state.currentHandSignImage} />
                 </div>
             )
         }
