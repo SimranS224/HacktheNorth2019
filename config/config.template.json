@@ -1,0 +1,5 @@
+{
+	"firebaseConfig": {
+	    ...	// populate this with the firebase credentials from the firebase console
+	}
+}
