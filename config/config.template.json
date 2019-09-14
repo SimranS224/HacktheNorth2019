@@ -1,5 +1,6 @@
 {
 	"firebaseConfig": {
-	    ...	// populate this with the firebase credentials from the firebase console
+	    ...	# populate this with the firebase credentials from the firebase console
+		# rename this file config.json
 	}
 }
