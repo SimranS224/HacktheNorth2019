@@ -4,6 +4,7 @@
   "description": "Hack the North 2019 Project",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "npm test"
   },
   "repository": {
@@ -23,6 +24,9 @@
   },
   "homepage": "https://github.com/SimranS224/HacktheNorth2019#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "firebase": "^6.6.1",
+    "nconf": "^0.10.0",
+    "xhr-promise": "^2.0.0"
   }
 }
