@@ -1,0 +1,28 @@
+{
+  "name": "hackthenorth2019",
+  "version": "0.0.1",
+  "description": "Hack the North 2019 Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimranS224/HacktheNorth2019.git"
+  },
+  "keywords": [
+    "hack",
+    "the",
+    "north",
+    "2019"
+  ],
+  "author": "Brian Lin, Simran Singh, Wenqin Ye, Andrew Liu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SimranS224/HacktheNorth2019/issues"
+  },
+  "homepage": "https://github.com/SimranS224/HacktheNorth2019#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
