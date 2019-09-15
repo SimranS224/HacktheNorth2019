@@ -5,6 +5,8 @@ import Timer from 'react-compound-timer';
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
 import C from '../sign_language_icons/C.svg';
+import getSign from '../sign-recognition/uploadImage.js';
+ 
 const classNames = require('classnames');
 
 const apiUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/90b7006d-2927-4348-86c4-e91a79e154d9/classify/iterations/sign-language-recognition/image';
@@ -21,6 +23,8 @@ class GameEngine extends React.Component {
         //                               "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
         
         // target: A B C D E K I    
+        console.log('test')
+        console.log(this);
         this.state.handSignOptions = ["A", "B", "C"];
         this.state.handSignImages = [A, B, C];
         this.state.currentHandSign = "A";
@@ -43,9 +47,14 @@ class GameEngine extends React.Component {
         });
     }
 
-    getResult() {
+    async getResult() {
         var options = [true, false];
-        var result = options[Math.floor(Math.random() * 2)];
+        // var result = options[Math.floor(Math.random() * 2)];
+        const response = await this.captureAndCheckImage();
+        console.log({response})
+        const actual = this.state.currentHandSignImage
+        console.log({actual})
+        var result = (response == this.state.currentHandSignImage)
         if(result) {
             this.setState({
                 result: "CORRECT"
@@ -56,11 +65,23 @@ class GameEngine extends React.Component {
             });
         }
     }
-
-    captureAndCheckImage() {
+    
+    async captureAndCheckImage() {
         const imageBase64 = this.webcamRef.current.getScreenshot();
-        let image = new Image();
-        image.src = imageBase64;    // image is now an image
+        // let image = new Image();
+        // image.src = imageBase64;   
+        // console.log({imageBase64})
+        var testnew = imageBase64.split(',')[1]
+        console.log(testnew);
+        // var url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        var buf = Buffer.from(testnew, 'base64'); // Ta-da
+        // var newbuf = Uint8Array.from(atob(imageBase64), c => c.charCodeAt(0))
+        console.log({buf})
+        return await getSign(buf);
+        // return fetch(imageBase64)
+        // .then(res => res.blob())
+        // .then(blob => getSign(blob))
+         // image is now an image
     }
 
     displayHandSignPrompt() {
@@ -71,7 +92,6 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_RESULT",
                     timeoutSet: false
                 });
-                this.captureAndCheckImage();
             }, 4000);
             this.setState({
                 timeoutSet: true
@@ -151,7 +171,6 @@ class GameEngine extends React.Component {
         )
     }
 
-
     render() {
         const currentStatus =  this.state.currentStatus;
         const videoConstraints = { facingMode: 'user'};
@@ -163,10 +182,19 @@ class GameEngine extends React.Component {
                     (currentStatus === "DISPLAY_MENU" && this.displayMenu()) ||
                     <div/>
                 }
-                <Webcam className="webcam" videoConstraints={videoConstraints} ref={this.webcamRef}/>
+                <Webcam className="webcam" screenshotFormat="image/png" videoConstraints={videoConstraints} ref={this.webcamRef}/>
             </>
         );
     }
   }
+
+
+
+
+
+
+
+
+  
 
   export default GameEngine;
