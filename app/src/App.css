@@ -4,6 +4,20 @@ body {
   color: white;
 }
 
+.logo {
+  height: 48px;
+  position: absolute;
+  left: 64px;
+  top: 32px;
+}
+
+.handSignPrompt .logo {
+  opacity: 0.2;
+}
+.result .logo {
+  opacity: 0.2;
+}
+
 .score {
   position: absolute;
   right: 64px;
@@ -122,6 +136,23 @@ h1, h2, p {
   animation-direction: alternate;
   animation-timing-function: ease;
   animation-iteration-count: 1;
+}
+
+.dimLogo {
+  animation-name: logoDim;
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+}
+
+@keyframes logoDim {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
 }
 
 @keyframes toOrange {

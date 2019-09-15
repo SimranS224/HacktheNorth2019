@@ -1,6 +1,6 @@
 import React from 'react';
 import Webcam from "react-webcam";
-import Countdown from 'react-countdown-now';
+import logo from '../logo.png';
 import Timer from 'react-compound-timer';
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
@@ -88,6 +88,7 @@ class GameEngine extends React.Component {
         }
         return (
             <div className="handSignPrompt">
+                <img className="logo" src={logo}></img>
                 <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                 <h1 className="label">Hand sign for</h1>
                 <h1 className="prompt">"{this.state.currentHandSign}"</h1>
@@ -122,6 +123,7 @@ class GameEngine extends React.Component {
         if(this.state.result === "CORRECT") {
             return (
                 <div className="result result-success">
+                    <img className="logo" src={logo}></img>
                     <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>You got it! </h1>
                     <img src={this.state.currentHandSignImage} />
@@ -130,6 +132,7 @@ class GameEngine extends React.Component {
         } else {
             return (
                 <div className="result result-failure">
+                    <img className="logo" src={logo}></img>
                     <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>Wrong</h1>
                     <img src={this.state.currentHandSignImage} />
@@ -173,6 +176,8 @@ class GameEngine extends React.Component {
         }
         return (
             <div className="menu">
+                <img className={classNames({"dimLogo": this.state.transitioningToGame, "logo": true})} 
+                    src={logo}/>
                 <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                 <h1>{headerText}</h1>
                 <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
