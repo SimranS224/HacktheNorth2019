@@ -30,12 +30,17 @@ h1, h2, p {
 .handSignPrompt .label{
   font-size: 64px;
   margin: 0;
-  padding-top: 128px;
+  padding-top: 144px;
   margin-bottom: 32px;
 }
 .handSignPrompt .prompt {
   font-size: 128px;
   margin: 0;
+}
+.handSignPrompt .time {
+  padding-top: 32px;
+  font-weight: bold;
+  font-size: 32px;
 }
 
 .result {
@@ -44,7 +49,7 @@ h1, h2, p {
 
 .result h1{
   font-size: 64px;
-  padding-top: 128px;
+  padding-top: 144px;
   margin-bottom: 32px;
 }
 .result img {

@@ -1,4 +1,6 @@
 import React from 'react';
+import Countdown from 'react-countdown-now';
+import Timer from 'react-compound-timer';
 
 // Import sign language icons
 import A from '../sign_language_icons/A.svg';
@@ -69,6 +71,13 @@ class GameEngine extends React.Component {
             <div className="handSignPrompt">
                 <h1 className="label">Hand sign for</h1>
                 <h1 className="prompt">"{this.state.currentHandSign}"</h1>
+                <div className="time">
+                    <Timer 
+                        initialTime={4100}
+                        direction="backward">
+                        <Timer.Seconds />
+                    </Timer>
+                </div>
             </div>
         )
     }
@@ -81,7 +90,7 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_HAND_SIGN",
                     timeoutSet: false
                 });
-            }, 2000);
+            }, 1500);
             this.setState({
                 timeoutSet: true
             })
@@ -122,7 +131,7 @@ class GameEngine extends React.Component {
     displayMenu() {
         return (
             <div className="menu">
-                <h1> Sign with me</h1>
+                <h1> Sign Together</h1>
                 <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
                 onClick={() => this.transitionToGame()} href="#">
                     <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
