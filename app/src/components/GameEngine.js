@@ -5,16 +5,15 @@ import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
 import C from '../sign_language_icons/C.svg';
 
-class GameEngine extends React.Component {
-    /*
+var classNames = require('classnames');
 
-    */
+class GameEngine extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {}
-        // POSSIBLE STATUSES: DISPLAYING_HAND_SIGN, DISPLAY_RESULT
-        this.state.currentStatus = "DISPLAY_HAND_SIGN"
+        // POSSIBLE STATUSES: DISPLAY_MENU, DISPLAYING_HAND_SIGN, DISPLAY_RESULT
+        this.state.currentStatus = "DISPLAY_MENU"
         // this.state.handSignOptions = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
         //                               "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
         
@@ -24,6 +23,7 @@ class GameEngine extends React.Component {
         this.state.currentHandSign = "A";
         this.state.currentHandSignImage = A;
         this.state.result = "CORRECT";
+        this.state.transitioningToGame = false;
 
         this.state.timeoutSet = false;
         
@@ -39,10 +39,17 @@ class GameEngine extends React.Component {
     }
 
     getResult() {
-        this.setState({
-            result: "CORRECT"
-        });
-        return true
+        var options = [true, false];
+        var result = options[Math.floor(Math.random() * 2)];
+        if(result) {
+            this.setState({
+                result: "CORRECT"
+            });
+        } else {
+            this.setState({
+                result: "FAILURE"
+            });
+        }
     }
 
     displayHandSignPrompt() {
@@ -74,31 +81,62 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_HAND_SIGN",
                     timeoutSet: false
                 });
-            }, 1000);
+            }, 2000);
             this.setState({
                 timeoutSet: true
             })
         }
         if(this.state.result === "CORRECT") {
             return (
-                <div className="result">
+                <div className="result result-success">
                     <h1>You got it! </h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
             )
         } else {
             return (
-                <div className="result">
-                    <h1>Better next time</h1>
+                <div className="result result-failure">
+                    <h1>Wrong</h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
             )
         }
     }
 
+    transitionToGame() {
+        this.setState({
+            transitioningToGame: true
+        });
+        setTimeout(() => {
+            this.setNewRandomHandSign();
+            this.setState({
+                currentStatus: "DISPLAY_HAND_SIGN",
+                timeoutSet: false
+            });
+        }, 700);
+        this.setState({
+            timeoutSet: true
+        })
+    }
+
+    displayMenu() {
+        return (
+            <div className="menu">
+                <h1> Sign with me</h1>
+                <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
+                onClick={() => this.transitionToGame()} href="#">
+                    <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
+                </a>
+                <div></div>
+            </div>
+        )
+    }
+
 
     render() {
-      if(this.state.currentStatus === "DISPLAY_HAND_SIGN") {
+      if(this.state.currentStatus === "DISPLAY_MENU") {
+        return this.displayMenu();
+      } else if(this.state.currentStatus === "DISPLAY_HAND_SIGN") {
         return this.displayHandSignPrompt();
       } else if(this.state.currentStatus === "DISPLAY_RESULT") {
         return this.displayResult();
