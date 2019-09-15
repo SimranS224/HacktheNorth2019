@@ -23,8 +23,16 @@ const projectId = "79ced5f2-36ce-48e2-911f-cb4ed1619d88";
 
     // Step 6. Show results
     console.log("Results:");
-    const signs = {}
+    let curMax = null;
+    let curMaxProbability = 0
+    
     results.predictions.forEach(predictedResult => {
+        const curOne = (predictedResult.probability * 100.0).toFixed(2)
+        if (curOne > curMaxProbability){
+            curMax = predictedResult.tagName
+            curMaxProbability = curOne
+        }
         console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%`);
     });
+    console.log(curMax)
 })()
