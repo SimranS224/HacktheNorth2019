@@ -15,8 +15,16 @@ const apiUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/
 const predictionKey = '2d4ae585659b490dae3b3a53bf022562';
 
 // Configure Firebase.
-const config = require('../config/config.json').firebaseConfig;
-firebase.initializeApp(config);
+//const config = require('../config/config.json').firebaseConfig;
+firebase.initializeApp({
+	    "apiKey": "AIzaSyCbHFUeb2ZLUmKEDq3yitz3rRvyrjgamOo",
+	    "authDomain": "hackthenorth2019-324cc.firebaseapp.com",
+	    "databaseURL": "https://hackthenorth2019-324cc.firebaseio.com",
+	    "projectId": "hackthenorth2019-324cc",
+	    "storageBucket": "hackthenorth2019-324cc.appspot.com",
+	    "messagingSenderId": "236796623294",
+	    "appId": "1:236796623294:web:ac2ec0646bd3b5b1e8e1ef"
+});
 
 // Configure FirebaseUI.
 let uiConfig = {
@@ -77,22 +85,21 @@ class GameEngine extends React.Component {
         // var result = options[Math.floor(Math.random() * 2)];
         let response;
         this.captureAndCheckImage()
-            .then((res) => {
-                response = res;
+            .then((response) => {
+                var result = (response == this.state.currentHandSign)
+                console.log("result: " + result);
+                console.log(response);
+                if(result) {
+                    this.setState({
+                        result: "CORRECT"
+                    });
+                } else {
+                    this.setState({
+                        result: "FAILURE"
+                    });
+                }
             }).catch((err) => console.log(err));
-        console.log({response})
-        const actual = this.state.currentHandSignImage
-        console.log({actual})
-        var result = (response == this.state.currentHandSignImage)
-        if(result) {
-            this.setState({
-                result: "CORRECT"
-            });
-        } else {
-            this.setState({
-                result: "FAILURE"
-            });
-        }
+
     }
     
     captureAndCheckImage() {
@@ -108,6 +115,8 @@ class GameEngine extends React.Component {
         if(!this.state.timeoutSet) {
             setTimeout(() => {
                 this.getResult();
+            }, 2000);
+            setTimeout(() => {
                 this.setState({
                     currentStatus: "DISPLAY_RESULT",
                     timeoutSet: false
@@ -183,7 +192,7 @@ class GameEngine extends React.Component {
             <div className="menu">
                 <h1>Sign Together</h1>
                 {
-                    !this.state.signedIn ? 
+                    !true ? 
                         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
                     :
                     <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
