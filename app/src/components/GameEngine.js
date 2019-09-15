@@ -28,6 +28,9 @@ class GameEngine extends React.Component {
         this.state.transitioningToGame = false;
 
         this.state.timeoutSet = false;
+
+        this.state.numCorrect = 0;
+        this.state.numSeen = 0;
         
         this.setNewRandomHandSign();
     }
@@ -45,11 +48,14 @@ class GameEngine extends React.Component {
         var result = options[Math.floor(Math.random() * 2)];
         if(result) {
             this.setState({
-                result: "CORRECT"
+                result: "CORRECT",
+                numCorrect: this.state.numCorrect + 1,
+                numSeen: this.state.numSeen + 1
             });
         } else {
             this.setState({
-                result: "FAILURE"
+                result: "FAILURE",
+                numSeen: this.state.numSeen + 1
             });
         }
     }
@@ -69,6 +75,7 @@ class GameEngine extends React.Component {
         }
         return (
             <div className="handSignPrompt">
+                <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                 <h1 className="label">Hand sign for</h1>
                 <h1 className="prompt">"{this.state.currentHandSign}"</h1>
                 <div className="time">
@@ -98,6 +105,7 @@ class GameEngine extends React.Component {
         if(this.state.result === "CORRECT") {
             return (
                 <div className="result result-success">
+                    <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>You got it! </h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
@@ -105,6 +113,7 @@ class GameEngine extends React.Component {
         } else {
             return (
                 <div className="result result-failure">
+                    <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>Wrong</h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
@@ -131,6 +140,7 @@ class GameEngine extends React.Component {
     displayMenu() {
         return (
             <div className="menu">
+                <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                 <h1> Sign Together</h1>
                 <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
                 onClick={() => this.transitionToGame()} href="#">

@@ -4,6 +4,14 @@ body {
   color: white;
 }
 
+.score {
+  position: absolute;
+  right: 64px;
+  top: 32px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
 h1, h2, p {
   margin: 0;
 }
