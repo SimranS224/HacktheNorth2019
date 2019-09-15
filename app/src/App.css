@@ -66,12 +66,12 @@ h1, h2, p {
 .webcam {
   z-index: 999;
   width: 15%;
+  transform: rotateY(180deg);
   position: absolute;
   bottom: 0;
   right: 0;
   margin-right: 25px;
   margin-bottom: 25px;
-  height: 300px;
 }
 
 .result-success {
