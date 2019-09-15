@@ -3,6 +3,7 @@ import Webcam from "react-webcam";
 import Countdown from 'react-countdown-now';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
+import logo from '../logo.png';
 import Timer from 'react-compound-timer';
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
@@ -66,6 +67,12 @@ class GameEngine extends React.Component {
         }
 
         this.state.timeoutSet = false;
+
+        this.state.numCorrect = 0;
+        this.state.numSeen = 0;
+        this.state.showScore = false;
+
+        this.state.maxSignsToShow = 2;
         
         this.setNewRandomHandSign();
 
@@ -81,8 +88,6 @@ class GameEngine extends React.Component {
     }
 
     getResult() {
-        var options = [true, false];
-        // var result = options[Math.floor(Math.random() * 2)];
         let response;
         this.captureAndCheckImage()
             .then((response) => {
@@ -91,15 +96,17 @@ class GameEngine extends React.Component {
                 console.log(response);
                 if(result) {
                     this.setState({
-                        result: "CORRECT"
+                        result: "CORRECT",
+                        numCorrect: this.state.numCorrect + 1,
+                        numSeen: this.state.numSeen + 1
                     });
                 } else {
                     this.setState({
-                        result: "FAILURE"
+                        result: "FAILURE",
+                        numSeen: this.state.numSeen + 1
                     });
                 }
             }).catch((err) => console.log(err));
-
     }
     
     captureAndCheckImage() {
@@ -128,6 +135,8 @@ class GameEngine extends React.Component {
         }
         return (
             <div className="handSignPrompt">
+                <img className="logo" src={logo}></img>
+                <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                 <h1 className="label">Hand sign for</h1>
                 <h1 className="prompt">"{this.state.currentHandSign}"</h1>
                 <div className="time">
@@ -144,11 +153,15 @@ class GameEngine extends React.Component {
     displayResult() {
         if(!this.state.timeoutSet) {
             setTimeout(() => {
-                this.setNewRandomHandSign();
-                this.setState({
-                    currentStatus: "DISPLAY_HAND_SIGN",
-                    timeoutSet: false
-                });
+                if(this.state.numSeen < this.state.maxSignsToShow) {
+                    this.setNewRandomHandSign();
+                    this.setState({
+                        currentStatus: "DISPLAY_HAND_SIGN",
+                        timeoutSet: false
+                    });
+                } else {
+                    this.restartGame();
+                }
             }, 1500);
             this.setState({
                 timeoutSet: true
@@ -157,6 +170,8 @@ class GameEngine extends React.Component {
         if(this.state.result === "CORRECT") {
             return (
                 <div className="result result-success">
+                    <img className="logo" src={logo}></img>
+                    <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>You got it! </h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
@@ -164,6 +179,8 @@ class GameEngine extends React.Component {
         } else {
             return (
                 <div className="result result-failure">
+                    <img className="logo" src={logo}></img>
+                    <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
                     <h1>Wrong</h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
@@ -173,13 +190,15 @@ class GameEngine extends React.Component {
 
     transitionToGame() {
         this.setState({
-            transitioningToGame: true
+            transitioningToGame: true,
         });
         setTimeout(() => {
             this.setNewRandomHandSign();
             this.setState({
                 currentStatus: "DISPLAY_HAND_SIGN",
-                timeoutSet: false
+                timeoutSet: false,
+                numSeen: 0,
+                numCorrect: 0,
             });
         }, 700);
         this.setState({
@@ -187,17 +206,35 @@ class GameEngine extends React.Component {
         })
     }
 
+    restartGame() {
+        this.setState({
+            transitioningToGame: false,
+            currentStatus: "DISPLAY_MENU",
+            showScore: true,
+        });
+    }
+
     displayMenu() {
+        var headerText = "Sign Together";
+        var buttonText = "Start"
+        if(this.state.showScore) {
+            headerText = "Your got " + this.state.numCorrect + "/" + this.state.numSeen + " correct";
+            buttonText = "Play again";
+        }
         return (
             <div className="menu">
-                <h1>Sign Together</h1>
+
+                <img className={classNames({"dimLogo": this.state.transitioningToGame, "logo": true})} 
+                    src={logo}/>
+                <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
+                <h1>{headerText}</h1>
                 {
                     !true ? 
                         <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
                     :
                     <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
                     onClick={() => this.transitionToGame()} href="#">
-                        <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
+                        <span className={classNames({"hide": this.state.transitioningToGame})}>{buttonText}</span>
                     </a>
                 }
                 <div></div>
