@@ -72,7 +72,7 @@ class GameEngine extends React.Component {
         this.state.numSeen = 0;
         this.state.showScore = false;
 
-        this.state.maxSignsToShow = 2;
+        this.state.maxSignsToShow = 5;
         
         this.setNewRandomHandSign();
 
@@ -199,6 +199,7 @@ class GameEngine extends React.Component {
                 timeoutSet: false,
                 numSeen: 0,
                 numCorrect: 0,
+                transitioningToGame: false
             });
         }, 700);
         this.setState({
