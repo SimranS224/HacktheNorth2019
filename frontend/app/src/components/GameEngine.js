@@ -51,9 +51,9 @@ class GameEngine extends React.Component {
         this.state.transitioningToGame = false;
 
         uiConfig.callbacks = {};
-        uiConfig.callbacks.signInSuccess = () => {
+        uiConfig.callbacks.signInSuccessWithAuthResult = () => {
           console.log('Signed in');
-          this.setState({signedIn: true});
+          this.setState({signedIn: true, uid: firebase.auth().currentUser.uid, displayName: firebase.auth().currentUser.displayName});
           return true;
         }
 
@@ -72,10 +72,14 @@ class GameEngine extends React.Component {
         });
     }
 
-    async getResult() {
+    getResult() {
         var options = [true, false];
         // var result = options[Math.floor(Math.random() * 2)];
-        const response = await this.captureAndCheckImage();
+        let response;
+        this.captureAndCheckImage()
+            .then((res) => {
+                response = res;
+            }).catch((err) => console.log(err));
         console.log({response})
         const actual = this.state.currentHandSignImage
         console.log({actual})
@@ -91,18 +95,9 @@ class GameEngine extends React.Component {
         }
     }
     
-    async captureAndCheckImage() {
+    captureAndCheckImage() {
         const imageBase64 = this.webcamRef.current.getScreenshot();
-        // let image = new Image();
-        // image.src = imageBase64;   
-        // console.log({imageBase64})
-        var testnew = imageBase64.split(',')[1]
-        console.log(testnew);
-        // var url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-        var buf = Buffer.from(testnew, 'base64'); // Ta-da
-        // var newbuf = Uint8Array.from(atob(imageBase64), c => c.charCodeAt(0))
-        console.log({buf})
-        return await getSign(buf);
+        return getSign(firebase.storage().ref(), this.state.uid, imageBase64);
         // return fetch(imageBase64)
         // .then(res => res.blob())
         // .then(blob => getSign(blob))
