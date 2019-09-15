@@ -1,9 +1,13 @@
 import React from 'react';
+import Webcam from "react-webcam";
 
 // Import sign language icons
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
 import C from '../sign_language_icons/C.svg';
+
+const apiUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/90b7006d-2927-4348-86c4-e91a79e154d9/classify/iterations/sign-language-recognition/image';
+const predictionKey = '2d4ae585659b490dae3b3a53bf022562';
 
 class GameEngine extends React.Component {
     /*
@@ -28,6 +32,8 @@ class GameEngine extends React.Component {
         this.state.timeoutSet = false;
         
         this.setNewRandomHandSign();
+
+        this.webcamRef = React.createRef();
     }
 
     setNewRandomHandSign() {
@@ -45,6 +51,12 @@ class GameEngine extends React.Component {
         return true
     }
 
+    captureAndCheckImage() {
+        const imageBase64 = this.webcamRef.current.getScreenshot();
+        let image = new Image();
+        image.src = imageBase64;    // image is now an image
+    }
+
     displayHandSignPrompt() {
         if(!this.state.timeoutSet) {
             setTimeout(() => {
@@ -53,10 +65,11 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_RESULT",
                     timeoutSet: false
                 });
+                this.captureAndCheckImage();
             }, 4000);
             this.setState({
                 timeoutSet: true
-            })
+            });
         }
         return (
             <div className="handSignPrompt">
@@ -98,13 +111,18 @@ class GameEngine extends React.Component {
 
 
     render() {
-      if(this.state.currentStatus === "DISPLAY_HAND_SIGN") {
-        return this.displayHandSignPrompt();
-      } else if(this.state.currentStatus === "DISPLAY_RESULT") {
-        return this.displayResult();
-      } else {
-          return <div></div>;
-      }
+        const currentStatus =  this.state.currentStatus;
+        const videoConstraints = { facingMode: 'user'};
+        return (
+            <>
+                {
+                    (currentStatus === "DISPLAY_HAND_SIGN" && this.displayHandSignPrompt()) ||
+                    (currentStatus === "DISPLAY_RESULT" && this.displayResult()) ||
+                    <div/>
+                }
+                <Webcam className="webcam" videoConstraints={videoConstraints} ref={this.webcamRef}/>
+            </>
+        );
     }
   }
 

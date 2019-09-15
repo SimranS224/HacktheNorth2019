@@ -15,7 +15,7 @@ h1, h2, p {
   animation-direction: alternate;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
-  height: 2000px;
+  height: 100vh;
 }
 
 @keyframes pulsate {
@@ -25,6 +25,11 @@ h1, h2, p {
   100% {
     background-color: #E6A250;
   }
+}
+
+.handSignPrompt {
+  overflow-y: hidden;
+  height: 100vh;
 }
 
 .handSignPrompt .label{
@@ -38,7 +43,7 @@ h1, h2, p {
 
 .result {
   background-color: #4BD7B2;
-  height: 2000px;
+  height: 100vh;
 }
 
 .result h1{
@@ -46,4 +51,14 @@ h1, h2, p {
 }
 .result img {
   width: 194px;
+}
+
+.webcam {
+  z-index: 999;
+  width: 15%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 25px;
+  margin-bottom: 25px;
 }
