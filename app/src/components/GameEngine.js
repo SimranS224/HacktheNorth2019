@@ -1,24 +1,22 @@
 import React from 'react';
 import Webcam from "react-webcam";
-
-// Import sign language icons
+import Countdown from 'react-countdown-now';
+import Timer from 'react-compound-timer';
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
 import C from '../sign_language_icons/C.svg';
+const classNames = require('classnames');
 
 const apiUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/90b7006d-2927-4348-86c4-e91a79e154d9/classify/iterations/sign-language-recognition/image';
 const predictionKey = '2d4ae585659b490dae3b3a53bf022562';
 
 class GameEngine extends React.Component {
-    /*
-
-    */
 
     constructor(props) {
         super(props);
         this.state = {}
-        // POSSIBLE STATUSES: DISPLAYING_HAND_SIGN, DISPLAY_RESULT
-        this.state.currentStatus = "DISPLAY_HAND_SIGN"
+        // POSSIBLE STATUSES: DISPLAY_MENU, DISPLAYING_HAND_SIGN, DISPLAY_RESULT
+        this.state.currentStatus = "DISPLAY_MENU"
         // this.state.handSignOptions = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
         //                               "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
         
@@ -28,6 +26,7 @@ class GameEngine extends React.Component {
         this.state.currentHandSign = "A";
         this.state.currentHandSignImage = A;
         this.state.result = "CORRECT";
+        this.state.transitioningToGame = false;
 
         this.state.timeoutSet = false;
         
@@ -45,10 +44,17 @@ class GameEngine extends React.Component {
     }
 
     getResult() {
-        this.setState({
-            result: "CORRECT"
-        });
-        return true
+        var options = [true, false];
+        var result = options[Math.floor(Math.random() * 2)];
+        if(result) {
+            this.setState({
+                result: "CORRECT"
+            });
+        } else {
+            this.setState({
+                result: "FAILURE"
+            });
+        }
     }
 
     captureAndCheckImage() {
@@ -75,6 +81,13 @@ class GameEngine extends React.Component {
             <div className="handSignPrompt">
                 <h1 className="label">Hand sign for</h1>
                 <h1 className="prompt">"{this.state.currentHandSign}"</h1>
+                <div className="time">
+                    <Timer 
+                        initialTime={4100}
+                        direction="backward">
+                        <Timer.Seconds />
+                    </Timer>
+                </div>
             </div>
         )
     }
@@ -87,26 +100,55 @@ class GameEngine extends React.Component {
                     currentStatus: "DISPLAY_HAND_SIGN",
                     timeoutSet: false
                 });
-            }, 1000);
+            }, 1500);
             this.setState({
                 timeoutSet: true
             })
         }
         if(this.state.result === "CORRECT") {
             return (
-                <div className="result">
+                <div className="result result-success">
                     <h1>You got it! </h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
             )
         } else {
             return (
-                <div className="result">
-                    <h1>Better next time</h1>
+                <div className="result result-failure">
+                    <h1>Wrong</h1>
                     <img src={this.state.currentHandSignImage} />
                 </div>
             )
         }
+    }
+
+    transitionToGame() {
+        this.setState({
+            transitioningToGame: true
+        });
+        setTimeout(() => {
+            this.setNewRandomHandSign();
+            this.setState({
+                currentStatus: "DISPLAY_HAND_SIGN",
+                timeoutSet: false
+            });
+        }, 700);
+        this.setState({
+            timeoutSet: true
+        })
+    }
+
+    displayMenu() {
+        return (
+            <div className="menu">
+                <h1> Sign Together</h1>
+                <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
+                onClick={() => this.transitionToGame()} href="#">
+                    <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
+                </a>
+                <div></div>
+            </div>
+        )
     }
 
 
@@ -118,6 +160,7 @@ class GameEngine extends React.Component {
                 {
                     (currentStatus === "DISPLAY_HAND_SIGN" && this.displayHandSignPrompt()) ||
                     (currentStatus === "DISPLAY_RESULT" && this.displayResult()) ||
+                    (currentStatus === "DISPLAY_MENU" && this.displayMenu()) ||
                     <div/>
                 }
                 <Webcam className="webcam" videoConstraints={videoConstraints} ref={this.webcamRef}/>

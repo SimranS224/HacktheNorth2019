@@ -11,9 +11,9 @@ h1, h2, p {
 .handSignPrompt {
   background-color: #E6BD50;
   animation-name: pulsate;
-  animation-duration: 0.7s;
+  animation-duration: 4s;
   animation-direction: alternate;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in;
   animation-iteration-count: infinite;
   height: 100vh;
 }
@@ -23,7 +23,7 @@ h1, h2, p {
     background-color: #E6BD50;
   }
   100% {
-    background-color: #E6A250;
+    background-color: white;
   }
 }
 
@@ -35,10 +35,17 @@ h1, h2, p {
 .handSignPrompt .label{
   font-size: 64px;
   margin: 0;
+  padding-top: 144px;
+  margin-bottom: 32px;
 }
 .handSignPrompt .prompt {
   font-size: 128px;
   margin: 0;
+}
+.handSignPrompt .time {
+  padding-top: 32px;
+  font-weight: bold;
+  font-size: 32px;
 }
 
 .result {
@@ -48,9 +55,12 @@ h1, h2, p {
 
 .result h1{
   font-size: 64px;
+  padding-top: 144px;
+  margin-bottom: 32px;
 }
 .result img {
   width: 194px;
+  max-height: 60%;
 }
 
 .webcam {
@@ -61,4 +71,60 @@ h1, h2, p {
   right: 0;
   margin-right: 25px;
   margin-bottom: 25px;
+  height: 300px;
+}
+
+.result-success {
+  background-color: #4BD7B2;
+}
+
+.result-failure {
+  background-color: #E67979;
+}
+
+.menu h1 {
+  padding-top: 128px;
+  margin-bottom: 64px;
+  color: black;
+  font-size: 64px;
+}
+
+.menu .button {
+  background-color: black;
+  padding-left: 128px;
+  padding-right: 128px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 32px;
+
+  margin: 0 auto;
+
+}
+
+.hide {
+  opacity: 0;
+}
+
+.expandButton {
+  animation-name: toOrange;
+  animation-duration: 0.7s;
+  animation-direction: alternate;
+  animation-timing-function: ease;
+  animation-iteration-count: 1;
+}
+
+@keyframes toOrange {
+  0% {
+    background-color: black;
+    padding: 0px;
+  }
+  100% {
+    background-color: #E6BD50;
+    
+    padding: 100vh;
+    color: white;
+  }
 }
