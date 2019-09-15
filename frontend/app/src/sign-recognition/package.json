@@ -1,0 +1,15 @@
+{
+  "name": "sign-recognition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "uploadImage.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cognitiveservices-customvision-prediction": "^4.0.0"
+  }
+}

@@ -1,4 +1,4 @@
-![Image description](logo.png)
+![Image description](images/logo.png)
 
 
 
@@ -33,3 +33,12 @@ Further functionality with other games that utilize hand gestures for other targ
 ## Devpost
 
 https://devpost.com/software/signtogether
+
+
+## Pictures
+
+![Image description](images/1.png) ![Image description](images/2.png)
+
+![Image description](images/red.png) ![Image description](images/green.png)
+
+![Image description](images/yellow.png)

@@ -12,8 +12,8 @@ const predictor = new PredictionAPIClient(predictionKey, endPoint);
 
 const publishIterationName = "sign-language-recognition";
 const projectId = "79ced5f2-36ce-48e2-911f-cb4ed1619d88";
-
-(async () => {
+ 
+export default getSign =  async () => {
     console.log("Creating project...");
     
     const testFile = fs.readFileSync(`${sampleData}`);
@@ -34,4 +34,4 @@ const projectId = "79ced5f2-36ce-48e2-911f-cb4ed1619d88";
         console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%`);
     });
     console.log(curMax)
-})()
+};
