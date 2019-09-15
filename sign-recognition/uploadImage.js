@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const { PredictionAPIClient } = require("@azure/cognitiveservices-customvision-prediction");
 
-const setTimeoutPromise = util.promisify(setTimeout);
 const predictionKey = "2d4ae585659b490dae3b3a53bf022562";
 
 const sampleData = "atestimage.jpg";
