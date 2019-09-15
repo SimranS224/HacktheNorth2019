@@ -128,3 +128,7 @@ h1, h2, p {
     color: white;
   }
 }
+
+.signin-wrapper {
+  background-color: red;
+}

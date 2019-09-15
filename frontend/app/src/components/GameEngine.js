@@ -1,6 +1,8 @@
 import React from 'react';
 import Webcam from "react-webcam";
 import Countdown from 'react-countdown-now';
+import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
+import firebase from 'firebase';
 import Timer from 'react-compound-timer';
 import A from '../sign_language_icons/A.svg';
 import B from '../sign_language_icons/B.svg';
@@ -10,11 +12,27 @@ const classNames = require('classnames');
 const apiUrl = 'https://southcentralus.api.cognitive.microsoft.com/customvision/v3.0/Prediction/90b7006d-2927-4348-86c4-e91a79e154d9/classify/iterations/sign-language-recognition/image';
 const predictionKey = '2d4ae585659b490dae3b3a53bf022562';
 
+// Configure Firebase.
+const config = require('../config/config.json').firebaseConfig;
+firebase.initializeApp(config);
+
+// Configure FirebaseUI.
+let uiConfig = {
+  // Popup signin flow rather than redirect flow.
+  signInFlow: 'popup',
+  // We will display Google as an auth provider.
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+  ]
+};
+
 class GameEngine extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            signedIn: false
+        };
         // POSSIBLE STATUSES: DISPLAY_MENU, DISPLAYING_HAND_SIGN, DISPLAY_RESULT
         this.state.currentStatus = "DISPLAY_MENU"
         // this.state.handSignOptions = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
@@ -27,6 +45,13 @@ class GameEngine extends React.Component {
         this.state.currentHandSignImage = A;
         this.state.result = "CORRECT";
         this.state.transitioningToGame = false;
+
+        uiConfig.callbacks = {};
+        uiConfig.callbacks.signInSuccess = () => {
+          console.log('Signed in');
+          this.setState({signedIn: true});
+          return true;
+        }
 
         this.state.timeoutSet = false;
         
@@ -141,11 +166,16 @@ class GameEngine extends React.Component {
     displayMenu() {
         return (
             <div className="menu">
-                <h1> Sign Together</h1>
-                <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
-                onClick={() => this.transitionToGame()} href="#">
-                    <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
-                </a>
+                <h1>Sign Together</h1>
+                {
+                    !this.state.signedIn ? 
+                        <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()}/>
+                    :
+                    <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
+                    onClick={() => this.transitionToGame()} href="#">
+                        <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
+                    </a>
+                }
                 <div></div>
             </div>
         )
