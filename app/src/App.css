@@ -118,7 +118,7 @@ h1, h2, p {
 
 .expandButton {
   animation-name: toOrange;
-  animation-duration: 0.7s;
+  animation-duration: 1s;
   animation-direction: alternate;
   animation-timing-function: ease;
   animation-iteration-count: 1;
@@ -132,7 +132,7 @@ h1, h2, p {
   100% {
     background-color: #E6BD50;
     
-    padding: 100vh;
+    padding: 200vh;
     color: white;
   }
 }

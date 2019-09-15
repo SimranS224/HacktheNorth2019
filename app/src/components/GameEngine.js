@@ -32,6 +32,9 @@ class GameEngine extends React.Component {
 
         this.state.numCorrect = 0;
         this.state.numSeen = 0;
+        this.state.showScore = false;
+
+        this.state.maxSignsToShow = 5;
         
         this.setNewRandomHandSign();
 
@@ -102,11 +105,15 @@ class GameEngine extends React.Component {
     displayResult() {
         if(!this.state.timeoutSet) {
             setTimeout(() => {
-                this.setNewRandomHandSign();
-                this.setState({
-                    currentStatus: "DISPLAY_HAND_SIGN",
-                    timeoutSet: false
-                });
+                if(this.state.numSeen < this.state.maxSignsToShow) {
+                    this.setNewRandomHandSign();
+                    this.setState({
+                        currentStatus: "DISPLAY_HAND_SIGN",
+                        timeoutSet: false
+                    });
+                } else {
+                    this.restartGame();
+                }
             }, 1500);
             this.setState({
                 timeoutSet: true
@@ -133,13 +140,15 @@ class GameEngine extends React.Component {
 
     transitionToGame() {
         this.setState({
-            transitioningToGame: true
+            transitioningToGame: true,
         });
         setTimeout(() => {
             this.setNewRandomHandSign();
             this.setState({
                 currentStatus: "DISPLAY_HAND_SIGN",
-                timeoutSet: false
+                timeoutSet: false,
+                numSeen: 0,
+                numCorrect: 0,
             });
         }, 700);
         this.setState({
@@ -147,14 +156,28 @@ class GameEngine extends React.Component {
         })
     }
 
+    restartGame() {
+        this.setState({
+            transitioningToGame: false,
+            currentStatus: "DISPLAY_MENU",
+            showScore: true,
+        });
+    }
+
     displayMenu() {
+        var headerText = "Sign Together";
+        var buttonText = "Start"
+        if(this.state.showScore) {
+            headerText = "Your got " + this.state.numCorrect + "/" + this.state.numSeen + " correct";
+            buttonText = "Play again";
+        }
         return (
             <div className="menu">
                 <div className="score">{this.state.numCorrect}/{this.state.numSeen}</div>
-                <h1> Sign Together</h1>
+                <h1>{headerText}</h1>
                 <a className={classNames({"expandButton": this.state.transitioningToGame, "button": true})} 
                 onClick={() => this.transitionToGame()} href="#">
-                    <span className={classNames({"hide": this.state.transitioningToGame})}>Start</span>
+                    <span className={classNames({"hide": this.state.transitioningToGame})}>{buttonText}</span>
                 </a>
                 <div></div>
             </div>
