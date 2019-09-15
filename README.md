@@ -29,3 +29,7 @@ We learned that computer vision has extensive applications for many social solut
 ## What's next for SignTogether
 
 Further functionality with other games that utilize hand gestures for other target demographics. 
+
+## Devpost
+
+https://devpost.com/software/signtogether
